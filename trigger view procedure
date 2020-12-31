@@ -1,0 +1,16 @@
+//Trigger
+create trigger save_in_deleted_musicians on musicians
+for delete as
+insert into deleted_musicians("m_no", "m_name", "born", "died", "born_in", "living_in")
+select m_no, m_name, born, died, born_in, living_in from deleted
+
+//View
+
+create view info_about_artists as select * from musician join artist on m_no = art_is join place on place_no = born_in
+
+//Procedure
+
+create procedure get_art_by_born_country
+@country varchar(40) as select info_of_artists.name
+from info_of_artists where names_of_artists.country = @country
+

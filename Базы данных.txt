@@ -1,0 +1,88 @@
+Базы данных
+1)Целостность данных - это круто
+2-ая нормальная форма
+Nнф = { (N-1)нф
+	
+		} условие
+Любой неключевой аттрибут неприводимо(работает если есть потенц ключ) зависит от потенциального ключа
+3 нормальная форма
+симметричность a + b = b + a
+рефлексивность 
+транзитивность a!=b, b!=c, a?=c
+A->B, A определяет B, то есть B зависит от A;
+3НФ - 2НФ + нет транзитивности; >< >< :C
+д/з привести к 3нф,
+с помощью draw io построить ER-диаграмы 
+скачать postgressql 9ver, виз клиент - pgAdmin3; (ms sql, mysql);
+///////
+create table "groups" 
+(
+	"id" serial primary key,
+	"name" varchar(12) not null
+);
+///////
+insert into "groups"(name) values('11-001');
+select * from groups;
+///////
+create table "students" 
+(
+	"id" serial primary key,
+	"name" varchar(15) not null,
+	"age" int not null check(age > 14),
+	"group_id" int references groups(id)
+);
+///////
+insert into "students"(name, age, group_id) 
+values('Семён', 18, 1);
+select * from students;
+///////
+create table "subdivisions"
+(
+	"subdivname" varchar(30) not null,
+	"subdivcode" int not null primary key,
+	"chief" worker,
+	"workerscount" int not null
+);
+
+////////////
+create table "positions"
+(
+	"position" varchar(30) not null primary key,
+	"rate" int not null,
+	"allowancefor10" int not null,
+	"allowancefor20" int not null,
+	"allowancefor30" int not null,
+	"allowanceforharm" int not null
+);
+/////////
+create table "workers"
+(
+	"surname" varchar(15) not null,
+	"name" varchar(15) not null,
+	"middlename" varchar(15),
+	"sex" varchar(5),
+	"birthday" date,
+	"subdivcode" int not null,
+	"position" from positions,
+	"allowance" int not null,
+	"harmful" int not null
+);
+//////////
+Вычитание A-B = {x|x e A, x !e B}
+Запрос Выбрать пользователей которые добавили только треки Моргенштерна
+Запрос _______U_____ !только
+
+where exists (_____)
+выбрать тех, для которых есть информация
+select * from users where exists (Q)
+Q = select * from likes join tracks on likes.trackid = tracks.id join artists on tracks.artists_id = artists.id where artists.name = 'Morgenstern'
+
+where exists A and not exists from likes join tracks on likes.trackid = track.id join artists on tracks.artists_id = artists.id where artists.name <> 'Morgenstern'
+select * from users where P
+"Для любого трека  существует добавление от пользователя" <=> "Не существует трек для которого не существует лайк"
+;;
+
+P = not exists (selectr * from tracks join artists on tracks.artists_id =artists.id where artists.name = 'Morgenstern') and
+not exists (select * from likes where likes.user_id = users.id and tracks.id = likes.track_id)
+;;
+Проекция, выборка, умножение, соедение, объедение, деление, пересечение - операторы реляционной алгебры баз данных
